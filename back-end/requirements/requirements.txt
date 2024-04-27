@@ -1,2 +1,3 @@
 -r requirements_api.txt
 -r requirements_db.txt
+-r requirements_test.txt
