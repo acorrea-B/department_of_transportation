@@ -1,0 +1,2 @@
+-r requirements_api.txt
+-r requirements_db.txt
