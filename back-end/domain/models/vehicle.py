@@ -4,3 +4,11 @@ class Vehicle:
         self.brand = brand
         self.color = color
         self.owner = owner
+
+    def to_dict(self):
+        return {
+            "license_plate": self.license_plate,
+            "brand": self.brand,
+            "color": self.color,
+            "owner": self.owner,
+        }
