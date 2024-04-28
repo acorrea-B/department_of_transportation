@@ -17,3 +17,7 @@ class IVehicleRepository(ABC):
     @abstractmethod
     def delete_vehicle(self, license_plate):
         pass
+    
+    @abstractmethod
+    def get_all_vehicles(self):
+        pass

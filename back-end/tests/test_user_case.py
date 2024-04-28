@@ -1,21 +1,4 @@
-import pytest
 from domain.models.user import User
-from application.use_cases.user_service import UserService
-
-
-@pytest.fixture(scope="function")
-def user_service(user_repository):
-    return UserService(user_repository)
-
-
-@pytest.fixture(scope="function")
-def model_user():
-    return User(name="John Doe", email="john.doe@example.com")
-
-
-@pytest.fixture(scope="function")
-def exists_user(model_user, user_repository):
-    return user_repository.add_user(model_user)
 
 
 def test_register_user(mongo_db, user_service):

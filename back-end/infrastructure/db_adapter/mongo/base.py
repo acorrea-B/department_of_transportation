@@ -11,14 +11,15 @@ class Base(Document):
     updated_at = DateTimeField(default=datetime.now())
 
     def to_dict(self):
-        result = self.to_mongo().to_dict()
-        response = result.copy()
+        result = self.reload().to_mongo()
+        response = {}
         for key, value in result.items():
-            if isinstance(value, ObjectId):
-                if key == "_id":
-                    response.pop(key)
-                    key = "id"
-                response[key] = str(value)
+            key = key if key != "_id" else "id"
+            value = getattr(self, key)
+            if isinstance(value, Document):
+                response[key] = value.to_dict()
+                continue
+            response[key] = value
 
         return response
 

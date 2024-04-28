@@ -1,0 +1,10 @@
+{
+    "user_not_found": "User not found.",
+    "user_invalid_data": "Invalid data provided for User.",
+    "agent_not_found": "Agent not found.",
+    "agent_invalid_data": "Invalid data provided for Agent.",
+    "vehicle_not_found": "Vehicle not found.",
+    "vehicle_invalid_data": "Invalid data provided for Vehicle.",
+    "violation_not_found": "Violation not found.",
+    "violation_invalid_data": "Invalid data provided for Violation."
+}

@@ -41,7 +41,7 @@ class MongoUserRepository(IUserRepository):
         except Exception as e:
             logger_error(f"Error adding user to database: {str(e)}")
             return None
-        return User(name=mongo_user.name, email=mongo_user.email)
+        return User(**mongo_user.to_dict())
 
     def get_user_by_email(self, email):
         """
@@ -55,7 +55,7 @@ class MongoUserRepository(IUserRepository):
         """
         mongo_user = MongoUser.objects(email=email).first()
         if mongo_user:
-            return User(name=mongo_user.name, email=mongo_user.email)
+            return User(**mongo_user.to_dict())
         return None
 
     def get_users(self):
@@ -78,11 +78,13 @@ class MongoUserRepository(IUserRepository):
             User: The updated user object.
 
         """
-        mongo_user = MongoUser.objects(email=user.email).first()
+        mongo_user = MongoUser.objects.get(email=user.email)
+        if not mongo_user:
+            return None
         mongo_user.name = user.name
         mongo_user.save()
 
-        return User(name=mongo_user.name, email=mongo_user.email)
+        return User(**mongo_user.to_dict())
 
     def delete_user(self, email):
         """

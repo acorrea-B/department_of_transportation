@@ -51,4 +51,13 @@ def test_delete_user(mongo_db, exists_user, user_repository):
     retrieved_user = user_repository.get_user_by_email(exists_user.email)
     assert retrieved_user is None
 
-
+def test_find_all_users(mongo_db, exists_user, user_repository):
+    retrieved_users = user_repository.get_users()
+    assert type(retrieved_users) == list
+    assert len(retrieved_users) >= 1
+    for user in retrieved_users:
+        assert type(user) == User
+        assert user.name is not None
+        assert user.email is not None
+        assert user.id is not None
+        assert user.updated_at is not None

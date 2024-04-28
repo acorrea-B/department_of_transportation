@@ -11,7 +11,7 @@ class IAgentRepository(ABC):
         pass
 
     @abstractmethod
-    def get_agent_by_id(self, license_plate):
+    def get_agent_by_identifier(self, license_plate):
         pass
 
     @abstractmethod
