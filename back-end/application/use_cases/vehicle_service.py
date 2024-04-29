@@ -36,9 +36,7 @@ class VehicleService:
         Returns:
             int: The ID of the newly registered vehicle.
         """
-        owner = self.user_service.find_user_by_email(owner_email)
-        if owner is None:
-            raise NotFoundModel(self.localization_adapter.get_message("user_not_found"))
+        owner = self.get_owner(owner_email)
         vehicle = Vehicle(
             license_plate=license_plate, brand=brand, color=color, owner=owner
         )
@@ -56,26 +54,36 @@ class VehicleService:
         """
         return self.vehicle_repository.get_vehicle_by_license_plate(license_plate)
 
-    def update_vehicle_info(self, vehicle_id, **kwargs):
+    def update_vehicle_info(self, license_plate, color, owner_email):
         """
-        Updates the information of a vehicle.
+        Update the information of a vehicle.
 
         Args:
-            vehicle_id (int): The ID of the vehicle.
-            **kwargs: The updated attributes of the vehicle.
+            license_plate (str): The license plate of the vehicle.
+            color (str): The new color of the vehicle.
+            owner_email (str): The email of the new owner of the vehicle.
 
         Returns:
-            bool: True if the vehicle was updated successfully, False otherwise.
+            bool: True if the vehicle information was successfully updated, False otherwise.
 
         Raises:
-            NotFoundModel: If the vehicle is not found.
+            NotFoundModel: If the vehicle or the owner is not found.
         """
-        vehicle = self.vehicle_repository.get_vehicle_by_license_plate(vehicle_id)
-        if vehicle:
-            for key, value in kwargs.items():
-                setattr(vehicle, key, value)
+
+        if vehicle := self.vehicle_repository.get_vehicle_by_license_plate(
+            license_plate
+        ):
+            if owner := self.get_owner(owner_email):
+                vehicle.owner = owner
+            vehicle.color = color
             return self.vehicle_repository.update_vehicle(vehicle)
         raise NotFoundModel(self.localization_adapter.get_message("vehicle_not_found"))
+
+    def get_owner(self, owner_email):
+        if owner_email:
+            if owner := self.user_service.find_user_by_email(owner_email):
+                return owner
+            raise NotFoundModel(self.localization_adapter.get_message("user_not_found"))
 
     def remove_vehicle(self, license_plate):
         """

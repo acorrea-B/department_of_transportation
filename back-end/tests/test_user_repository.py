@@ -1,15 +1,4 @@
-import pytest
 from domain.models.user import User
-
-
-@pytest.fixture(scope="function")
-def model_user():
-    return User(name="John Doe", email="john.doe@example.com")
-
-
-@pytest.fixture(scope="function")
-def exists_user(model_user, user_repository):
-    return user_repository.add_user(model_user)
 
 
 def test_add_user(mongo_db, user_repository, model_user):
@@ -46,10 +35,12 @@ def test_user_not_found_by_email(mongo_db, user_repository):
     retrieved_user = user_repository.get_user_by_email("nonexistent@example.com")
     assert retrieved_user is None
 
+
 def test_delete_user(mongo_db, exists_user, user_repository):
     user_repository.delete_user(exists_user.email)
     retrieved_user = user_repository.get_user_by_email(exists_user.email)
     assert retrieved_user is None
+
 
 def test_find_all_users(mongo_db, exists_user, user_repository):
     retrieved_users = user_repository.get_users()

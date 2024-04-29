@@ -1,14 +1,12 @@
-from exceptions import BaseException
-
-class InvalidInput(BaseException):
+class InvalidInput(Exception):
     def __init__(self, message):
         super().__init__(message)
 
-class NotFoundModel(BaseException):
+class NotFoundModel(Exception):
     def __init__(self, message):
         super().__init__(message)
 
-class AlreadyExists(BaseException):
+class AlreadyExists(Exception):
     def __init__(self, message):
         super().__init__(message)
 

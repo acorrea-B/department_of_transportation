@@ -45,7 +45,9 @@ class MongoVehicleRepository(IVehicleRepository):
             Vehicle: The retrieved vehicle object if found, None otherwise.
         """
         try:
-            return MongoVehicle.objects.get(license_plate=license_plate)
+            return Vehicle(
+                **MongoVehicle.objects.get(license_plate=license_plate).to_dict()
+            )
         except DoesNotExist:
             return None
 
@@ -60,7 +62,7 @@ class MongoVehicleRepository(IVehicleRepository):
             Vehicle: The updated vehicle object if successful, None otherwise.
         """
         try:
-            mongo_vehicle = self.get_vehicle_by_license_plate(vehicle.license_plate)
+            mongo_vehicle = MongoVehicle.objects.get(license_plate=vehicle.license_plate)
             if mongo_vehicle:
                 mongo_vehicle.brand = vehicle.brand
                 mongo_vehicle.color = vehicle.color
@@ -81,11 +83,12 @@ class MongoVehicleRepository(IVehicleRepository):
         Returns:
             bool: True if the vehicle was deleted successfully, False otherwise.
         """
-        vehicle = self.get_vehicle_by_license_plate(license_plate)
-        if vehicle:
-            vehicle.delete()
+        try:
+            MongoVehicle.objects.get(license_plate=license_plate).delete()
             return True
-        return False
+        except Exception as e:
+            logger_error(f"Error deleting vehicle from database: {str(e)}")
+            return False
 
     def get_all_vehicles(self):
         """
