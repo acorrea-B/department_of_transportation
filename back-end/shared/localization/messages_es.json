@@ -1,5 +1,6 @@
 {
     "user_not_found": "Usuario no encontrado.",
+    "invalid_email": "Formato de correo electrónico inválido.",
     "user_invalid_data": "Datos inválidos proporcionados para Usuario.",
     "agent_not_found": "Agente no encontrado.",
     "agent_invalid_data": "Datos inválidos proporcionados para Agente.",

@@ -8,6 +8,11 @@ def test_add_user(mongo_db, user_repository, model_user):
     assert retrieved_user.name == "John Doe"
     assert retrieved_user.email == "john.doe@example.com"
 
+def test_add_user_bad_email_format(mongo_db, user_repository, model_user_bad_email):
+    with raises(ValidationError) as exc_info:
+        retrieved_user = user_repository.add_user(model_user_bad_email)
+        assert retrieved_user is None
+
 
 def test_email_already_exists(mongo_db, exists_user, user_repository):
     retrieved_user = user_repository.add_user(exists_user)

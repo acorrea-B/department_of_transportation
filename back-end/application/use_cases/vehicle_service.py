@@ -103,3 +103,12 @@ class VehicleService:
                 self.localization_adapter.get_message("vehicle_not_found")
             )
         return None
+    
+    def find_all_vehicles(self):
+        """
+        Finds all vehicles.
+
+        Returns:
+            list: A list of all vehicles.
+        """
+        return self.vehicle_repository.get_all_vehicles()

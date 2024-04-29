@@ -1,3 +1,5 @@
+from pytest import raises
+from mongoengine import ValidationError
 from domain.models.user import User
 
 
@@ -9,6 +11,14 @@ def test_register_user(mongo_db, user_service):
     assert type(new_user) == User
     assert new_user.name == name
     assert new_user.email == email
+
+def teest_register_bad_email_format(mongo_db, user_service):
+    name = "John Doe"
+    email = "john.doeexample.com"
+    with raises(ValidationError) as exc_info:
+        new_user = user_service.register_user(name, email)
+        assert exc_info.value.message == "Invalid email format"
+    
 
 
 def test_find_user_by_email(mongo_db, user_service, exists_user):
