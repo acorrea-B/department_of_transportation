@@ -1,7 +1,7 @@
 from re import match
-from mongoengine import StringField, ValidationError
+from mongoengine import StringField
 from infrastructure.db_adapter.mongo.base import Base
-
+from shared.utils.exceptions import DataValidationError
 
 class User(Base):
     name = StringField(required=True)
@@ -11,4 +11,4 @@ class User(Base):
         if not match(
             r"^\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b$", self.email
         ):
-            raise ValidationError("Invalid email format")
+            raise DataValidationError("invalid_email")

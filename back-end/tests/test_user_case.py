@@ -1,6 +1,6 @@
 from pytest import raises
-from mongoengine import ValidationError
 from domain.models.user import User
+from shared.utils.exceptions import DataValidationError, UniqueViolation, NotFoundModel
 
 
 def test_register_user(mongo_db, user_service):
@@ -12,13 +12,19 @@ def test_register_user(mongo_db, user_service):
     assert new_user.name == name
     assert new_user.email == email
 
-def teest_register_bad_email_format(mongo_db, user_service):
+
+def test_register_bad_email_format(mongo_db, user_service):
     name = "John Doe"
     email = "john.doeexample.com"
-    with raises(ValidationError) as exc_info:
-        new_user = user_service.register_user(name, email)
-        assert exc_info.value.message == "Invalid email format"
-    
+    with raises(DataValidationError) as exc_info:
+        user_service.register_user(name, email)
+        assert exc_info.value.message == "invalid_email"
+
+
+def test_register_user_email_already_exists(mongo_db, user_service, exists_user):
+    with raises(UniqueViolation) as exc_info:
+        user_service.register_user(exists_user.name, exists_user.email)
+        assert "unique" in str(exc_info)
 
 
 def test_find_user_by_email(mongo_db, user_service, exists_user):
@@ -26,6 +32,12 @@ def test_find_user_by_email(mongo_db, user_service, exists_user):
     assert retrieved_user is not None
     assert type(retrieved_user) == User
     assert retrieved_user.email == exists_user.email
+
+
+def test_find_user_by_email_not_found(mongo_db, user_service):
+    with raises(NotFoundModel) as exc_info:
+        user_service.find_user_by_email("not_exist@test")
+        assert "user_not_found" in str(exc_info)
 
 
 def test_find_all_users(mongo_db, user_service, exists_user):
@@ -45,3 +57,9 @@ def test_update_user(mongo_db, user_service, exists_user):
 
 def test_delete_user(mongo_db, user_service, exists_user):
     assert user_service.delete_user(exists_user.email) == None
+
+
+def test_delete_user_not_found(mongo_db, user_service):
+    with raises(NotFoundModel) as exc_info:
+        user_service.delete_user("not_exist@test")
+        assert "user_not_found" in str(exc_info)

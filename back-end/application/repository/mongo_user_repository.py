@@ -1,7 +1,14 @@
+from mongoengine import ValidationError, NotUniqueError, DoesNotExist
 from application.ports.i_user_repository import IUserRepository
 from infrastructure.db_adapter.mongo.user import User as MongoUser
 from domain.models.user import User
 from shared.utils.logger import logger_error
+from shared.utils.exceptions import (
+    NotFoundModel,
+    UniqueViolation,
+    DataValidationError,
+    BDInsertError,
+)
 
 
 class MongoUserRepository(IUserRepository):
@@ -38,9 +45,13 @@ class MongoUserRepository(IUserRepository):
         try:
             mongo_user = MongoUser(name=user.name, email=user.email)
             mongo_user.save()
+        except DataValidationError as e:
+            raise DataValidationError(str(e))
+        except NotUniqueError as e:
+            raise UniqueViolation(str(e))
         except Exception as e:
             logger_error(f"Error adding user to database: {str(e)}")
-            return None
+            raise BDInsertError(str(e))
         return User(**mongo_user.to_dict())
 
     def get_user_by_email(self, email):
@@ -56,7 +67,7 @@ class MongoUserRepository(IUserRepository):
         mongo_user = MongoUser.objects(email=email).first()
         if mongo_user:
             return User(**mongo_user.to_dict())
-        return None
+        raise NotFoundModel("user_not_found")
 
     def get_users(self):
         """
@@ -80,7 +91,7 @@ class MongoUserRepository(IUserRepository):
         """
         mongo_user = MongoUser.objects.get(email=user.email)
         if not mongo_user:
-            return None
+            raise NotFoundModel("user_not_found")
         mongo_user.name = user.name
         mongo_user.save()
 
@@ -97,9 +108,11 @@ class MongoUserRepository(IUserRepository):
             None
         """
         try:
-            mongo_user = MongoUser.objects(email=email).first()
+            mongo_user = MongoUser.objects.get(email=email)
             mongo_user.delete()
+            return None
+        except DoesNotExist as e:
+            raise NotFoundModel("user_not_found")
         except Exception as e:
             logger_error(f"Error deleting user from database: {str(e)}")
-        finally:
-            return None
+            raise BDInsertError(str(e))
