@@ -1,5 +1,4 @@
 import pytest
-from application.use_cases.vehicle_service import VehicleService
 from domain.models.vehicle import Vehicle
 from shared.utils.exceptions import NotFoundModel
 

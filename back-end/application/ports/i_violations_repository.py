@@ -7,13 +7,21 @@ class IViolationRepository(ABC):
         pass
 
     @abstractmethod
-    def get_violations_by_license_plate(self, license_plate):
+    def get_violations_by_vehicle(self, vehicle_id):
         pass
-    
+
     @abstractmethod
-    def get_violations(self):
+    def get_all_violations(self):
         pass
-    
+
     @abstractmethod
-    def get_violations_by_user_email(self, email):
+    def get_violation_by_id(self, violation_id):
+        pass
+
+    @abstractmethod
+    def update_violation(self, violation):
+        pass
+
+    @abstractmethod
+    def delete_violation(self, violation):
         pass

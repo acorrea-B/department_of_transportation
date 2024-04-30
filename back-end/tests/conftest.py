@@ -1,18 +1,22 @@
 import pytest
 import mongomock
+from datetime import datetime
 from mongoengine import connect, disconnect
 from application.repository.mongo_user_repository import MongoUserRepository
 from application.repository.mongo_agent_repository import MongoAgentRepository
 from application.repository.mongo_vehicle_repository import MongoVehicleRepository
+from application.repository.mongo_violation_repository import MongoViolationsRepository
 from infrastructure.localization.json_localization import JSONLocalizationAdapter
 
 from application.use_cases.user_service import UserService
 from application.use_cases.agent_service import AgentService
 from application.use_cases.vehicle_service import VehicleService
+from application.use_cases.violation_service import ViolationService
 
 from domain.models.user import User
 from domain.models.vehicle import Vehicle
 from domain.models.agent import Agent
+from domain.models.violation import Violation
 
 
 @pytest.fixture(scope="function")
@@ -49,6 +53,11 @@ def vehicle_repository():
 
 
 @pytest.fixture(scope="function")
+def violation_repository():
+    return MongoViolationsRepository()
+
+
+@pytest.fixture(scope="function")
 def user_service(user_repository):
     return UserService(user_repository)
 
@@ -64,6 +73,11 @@ def vehicle_service(vehicle_repository, user_service, localization_adapter):
 
 
 @pytest.fixture(scope="function")
+def violation_service(violation_repository, vehicle_service):
+    return ViolationService(violation_repository, vehicle_service)
+
+
+@pytest.fixture(scope="function")
 def exists_agent(model_agent, agent_repository):
     agent = agent_repository.add_agent(model_agent)
     return agent
@@ -72,6 +86,7 @@ def exists_agent(model_agent, agent_repository):
 @pytest.fixture(scope="function")
 def model_user():
     return User(name="John Doe", email="john.doe@example.com")
+
 
 @pytest.fixture(scope="function")
 def model_user_2():
@@ -84,8 +99,27 @@ def model_agent():
 
 
 @pytest.fixture(scope="function")
+def model_violation(exists_agent, exists_vehicle):
+    return Violation(
+        vehicle=exists_vehicle,
+        timestamp=datetime.now(),
+        comments="Speeding",
+    )
+
+
+@pytest.fixture(scope="function")
+def model_violation_2(exists_agent, exists_vehicle):
+    return Violation(
+        vehicle=exists_vehicle,
+        timestamp=datetime.now(),
+        comments="Running a red light",
+    )
+
+
+@pytest.fixture(scope="function")
 def exists_user(model_user, user_repository):
     return user_repository.add_user(model_user)
+
 
 @pytest.fixture(scope="function")
 def exists_user_2(model_user_2, user_repository):
@@ -102,3 +136,13 @@ def model_vehicle(exists_user):
 @pytest.fixture(scope="function")
 def exists_vehicle(model_vehicle, vehicle_repository):
     return vehicle_repository.add_vehicle(model_vehicle)
+
+
+@pytest.fixture(scope="function")
+def exist_violation(model_violation, violation_repository):
+    return violation_repository.add_violation(model_violation)
+
+
+@pytest.fixture(scope="function")
+def exist_violation_2(model_violation_2, violation_repository):
+    return violation_repository.add_violation(model_violation_2)
