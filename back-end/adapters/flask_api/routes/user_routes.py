@@ -1,17 +1,18 @@
-from flask import Blueprint, request, jsonify
-from application.use_cases.user_service import UserService
-from application.repository.mongo_user_repository import MongoUserRepository
+from flask import Blueprint, request, jsonify, current_app
 from adapters.flask_api.inputs.user_input import RegisterUserForm
 from shared.utils.exceptions import NotFoundModel, UniqueViolation
-from infrastructure.localization.json_localization import JSONLocalizationAdapter
 
-user_service = UserService(MongoUserRepository())
-localization = JSONLocalizationAdapter("en", "shared/localization/")
+
 user_blueprint = Blueprint("user_blueprint", __name__)
+dependencies = lambda dependencie: getattr(
+    current_app.blueprints["user_blueprint"].dependencie_container, dependencie
+)
 
 
 @user_blueprint.route("/users", methods=["GET"])
 def get_users():
+    user_service = dependencies("service_user")
+    localization = dependencies("localization")
     users = user_service.find_all_users()
     return (
         jsonify(
@@ -24,6 +25,8 @@ def get_users():
 
 @user_blueprint.route("/users/<string:email>", methods=["GET"])
 def get_user(email):
+    user_service = dependencies("service_user")
+    localization = dependencies("localization")
     try:
         user = user_service.find_user_by_email(email)
         return (
@@ -36,6 +39,8 @@ def get_user(email):
 
 @user_blueprint.route("/users", methods=["POST"])
 def register_user():
+    user_service = dependencies("service_user")
+    localization = dependencies("localization")
     form = RegisterUserForm(formdata=request.form, data=request.get_json())
     if not form.validate():
         return jsonify(user={}, message=form.errors), 400
@@ -53,6 +58,8 @@ def register_user():
 
 @user_blueprint.route("/users", methods=["PUT"])
 def update_user():
+    user_service = dependencies("service_user")
+    localization = dependencies("localization")
     form = RegisterUserForm(formdata=request.form, data=request.get_json())
     if not form.validate():
         return jsonify(user={}, message=form.errors), 400
@@ -67,6 +74,8 @@ def update_user():
 
 @user_blueprint.route("/users/<string:email>", methods=["DELETE"])
 def delete_user(email):
+    user_service = dependencies("service_user")
+    localization = dependencies("localization")
     try:
         user_service.delete_user(email)
         return jsonify(user={}, message=localization.get_message("user_deleted")), 200
