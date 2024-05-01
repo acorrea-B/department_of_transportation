@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify, current_app
-from adapters.flask_api.inputs.user_input import RegisterUserForm
+from adapters.flask_api.inputs.user_input import UserForm
 from shared.utils.exceptions import NotFoundModel, UniqueViolation
 
 
@@ -41,7 +41,7 @@ def get_user(email):
 def register_user():
     user_service = dependencies("service_user")
     localization = dependencies("localization")
-    form = RegisterUserForm(formdata=request.form, data=request.get_json())
+    form = UserForm(formdata=request.form, data=request.get_json())
     if not form.validate():
         return jsonify(user={}, message=form.errors), 400
     try:
@@ -60,7 +60,7 @@ def register_user():
 def update_user():
     user_service = dependencies("service_user")
     localization = dependencies("localization")
-    form = RegisterUserForm(formdata=request.form, data=request.get_json())
+    form = UserForm(formdata=request.form, data=request.get_json())
     if not form.validate():
         return jsonify(user={}, message=form.errors), 400
     try:

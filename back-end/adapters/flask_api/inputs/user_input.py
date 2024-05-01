@@ -1,7 +1,7 @@
 from wtforms import Form, StringField, EmailField, validators
 
 
-class RegisterUserForm(Form):
+class UserForm(Form):
     name = StringField(
         "name", [validators.DataRequired(), validators.Length(min=4, max=30)]
     )
