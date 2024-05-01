@@ -45,7 +45,7 @@ class UserService:
         Returns:
             list: A list of user objects.
         """
-        return [self.user_repository.get_users()]
+        return self.user_repository.get_users()
 
     def update_user(self, name, email):
         """
