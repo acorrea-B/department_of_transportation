@@ -89,8 +89,9 @@ class MongoUserRepository(IUserRepository):
             User: The updated user object.
 
         """
-        mongo_user = MongoUser.objects.get(email=user.email)
-        if not mongo_user:
+        try:
+            mongo_user = MongoUser.objects.get(email=user.email)
+        except DoesNotExist:
             raise NotFoundModel("user_not_found")
         mongo_user.name = user.name
         mongo_user.save()

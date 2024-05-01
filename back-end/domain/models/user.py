@@ -10,6 +10,6 @@ class User(Base):
         return {
             "name": self.name,
             "email": self.email,
-            "id": self.id,
+            "id": str(self.id),
             "updated_at": str(self.updated_at),
         }
