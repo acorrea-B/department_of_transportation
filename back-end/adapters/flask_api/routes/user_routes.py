@@ -11,6 +11,12 @@ dependencies = lambda dependencie: getattr(
 
 @user_blueprint.route("/users", methods=["GET"])
 def get_users():
+    """
+    Retrieve all users.
+
+    Returns:
+        A JSON response containing a list of users and a message.
+    """
     user_service = dependencies("service_user")
     localization = dependencies("localization")
     users = user_service.find_all_users()
@@ -25,6 +31,18 @@ def get_users():
 
 @user_blueprint.route("/users/<string:email>", methods=["GET"])
 def get_user(email):
+    """
+    Retrieve a user by email.
+
+    Args:
+        email (str): The email of the user.
+
+    Returns:
+        A JSON response containing the user and a message.
+
+    Raises:
+        NotFoundModel: If the user is not found.
+    """
     user_service = dependencies("service_user")
     localization = dependencies("localization")
     try:
@@ -39,6 +57,15 @@ def get_user(email):
 
 @user_blueprint.route("/users", methods=["POST"])
 def register_user():
+    """
+    Register a new user.
+
+    Returns:
+        A JSON response containing the created user and a message.
+
+    Raises:
+        UniqueViolation: If the user already exists.
+    """
     user_service = dependencies("service_user")
     localization = dependencies("localization")
     form = UserForm(formdata=request.form, data=request.get_json())
@@ -58,6 +85,15 @@ def register_user():
 
 @user_blueprint.route("/users", methods=["PUT"])
 def update_user():
+    """
+    Update a user.
+
+    Returns:
+        A JSON response containing the updated user and a message.
+
+    Raises:
+        NotFoundModel: If the user is not found.
+    """
     user_service = dependencies("service_user")
     localization = dependencies("localization")
     form = UserForm(formdata=request.form, data=request.get_json())
@@ -74,6 +110,18 @@ def update_user():
 
 @user_blueprint.route("/users/<string:email>", methods=["DELETE"])
 def delete_user(email):
+    """
+    Delete a user by email.
+
+    Args:
+        email (str): The email of the user to delete.
+
+    Returns:
+        A JSON response containing a message.
+
+    Raises:
+        NotFoundModel: If the user is not found.
+    """
     user_service = dependencies("service_user")
     localization = dependencies("localization")
     try:
