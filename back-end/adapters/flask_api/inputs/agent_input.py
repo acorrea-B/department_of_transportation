@@ -1,8 +1,8 @@
 from wtforms import Form, StringField, EmailField, validators
 
 
-class UserForm(Form):
+class AgentForm(Form):
     name = StringField(
         "Name", [validators.DataRequired(), validators.Length(min=4, max=30)]
     )
-    email = EmailField("Email Address", [validators.DataRequired(), validators.Email()])
+    identifier = StringField("Agent identification", [validators.DataRequired()])

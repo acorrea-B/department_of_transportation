@@ -54,3 +54,12 @@ class AgentService:
             identifier (str): The identifier of the agent to remove.
         """
         self.agent_repository.delete_agent(identifier)
+
+    def find_all_agents(self):
+            """
+            Retrieves all agents from the agent repository.
+
+            Returns:
+                A list of all agents.
+            """
+            return self.agent_repository.get_agents()
