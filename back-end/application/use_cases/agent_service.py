@@ -1,6 +1,7 @@
 from application.ports.i_agent_repository import IAgentRepository
 from domain.models.agent import Agent
 
+
 class AgentService:
     """
     This class represents the service layer for managing agents.
@@ -44,7 +45,7 @@ class AgentService:
             identifier (str): The identifier of the agent to update.
         """
         agent = Agent(name=name, identifier=identifier)
-        self.agent_repository.update_agent(agent)
+        return self.agent_repository.update_agent(agent)
 
     def remove_agent(self, identifier):
         """
@@ -53,13 +54,13 @@ class AgentService:
         Args:
             identifier (str): The identifier of the agent to remove.
         """
-        self.agent_repository.delete_agent(identifier)
+        return self.agent_repository.delete_agent(identifier)
 
     def find_all_agents(self):
-            """
-            Retrieves all agents from the agent repository.
+        """
+        Retrieves all agents from the agent repository.
 
-            Returns:
-                A list of all agents.
-            """
-            return self.agent_repository.get_agents()
+        Returns:
+            A list of all agents.
+        """
+        return self.agent_repository.get_agents()

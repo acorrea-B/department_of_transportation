@@ -11,6 +11,6 @@ class Agent(Base):
         return {
             "name": self.name,
             "identifier": self.identifier,
-            "id": self.id,
+            "id": str(self.id),
             "updated_at": str(self.updated_at),
         }
