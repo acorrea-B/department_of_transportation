@@ -1,3 +1,6 @@
+from pytest import raises
+from shared.utils.exceptions import NotFoundModel, UniqueViolation
+
 def test_register_agent(mongo_db, agent_service, agent_repository, model_agent):
 
     agent = agent_service.register_agent(model_agent.name, model_agent.identifier)
@@ -35,4 +38,6 @@ def test_remove_agent(mongo_db, agent_service, agent_repository, exists_agent):
 
     agent_service.remove_agent(exists_agent.identifier)
 
-    assert agent_repository.get_agent_by_identifier(exists_agent.identifier) is None
+    with raises(NotFoundModel) as excep_info:
+        assert agent_repository.get_agent_by_identifier(exists_agent.identifier) is None
+        assert "agent_not_found" in str(excep_info)

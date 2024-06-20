@@ -1,4 +1,5 @@
 import pytest
+from shared.utils.exceptions import NotFoundModel
 from domain.models.agent import Agent
 
 
@@ -45,15 +46,15 @@ def test_delete_agent(mongo_db, agent_repository, exists_agent):
 
     agent_repository.delete_agent(exists_agent.identifier)
 
-    result = agent_repository.get_agent_by_identifier(exists_agent.identifier)
-
-    assert result is None
+    with pytest.raises(NotFoundModel) as excep_info:
+        agent_repository.get_agent_by_identifier(exists_agent.identifier)
+        assert "agent_not_found" in str(excep_info)
 
 
 def test_agent_not_found_by_identifier(mongo_db, agent_repository):
-    result = agent_repository.get_agent_by_identifier("nonexistent")
-
-    assert result is None
+    with pytest.raises(NotFoundModel) as excep_info:
+        agent_repository.get_agent_by_identifier("nonexistent")
+        assert "agent_not_found" in str(excep_info)
 
 
 def update_agent_not_found_by_identifier(mongo_db, agent_repository, model_agent):
