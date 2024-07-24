@@ -1,0 +1,18 @@
+FROM python:3.11.9-slim-bookworm
+
+RUN apt-get update && apt-get upgrade -y
+
+RUN groupadd -r user && useradd -r -g user user
+
+WORKDIR /app
+
+RUN python -m venv /opt/venv
+
+COPY ["./back-end", "./"]
+
+RUN pip install --no-cache-dir --upgrade pip \
+    && pip install --no-cache-dir -r requirements/requirements.txt
+
+EXPOSE 5000
+
+CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "adapters.flask_api.main:app"]

@@ -1,4 +1,7 @@
 from flask import Flask
+from mongoengine import connect
+
+from shared.config.env_vars import Config
 
 from application.use_cases.user_service import UserService
 from application.use_cases.agent_service import AgentService
@@ -12,22 +15,23 @@ from application.repository.mongo_vehicle_repository import MongoVehicleReposito
 from adapters.flask_api.routes.user_routes import user_blueprint
 from adapters.flask_api.routes.agent_routes import agent_blueprint
 from adapters.flask_api.routes.vehicle_routes import vehicle_blueprint
-from mongoengine import connect
+
+
 
 
 class DependenciContainer:
     def __init__(self):
         connect(
-            db="test",
-            username="user",
-            password="123456",
-            host="mongodb://user:123456@localhost/",
+            db=Config.MONGO_DB,
+            username=Config.MONGO_USERNAME,
+            password=Config.MONGO_PASSWORD,
+            host=Config.MONGO_HOST,
         )
 
     localization = JSONLocalizationAdapter("en", "shared/localization/")
     service_user = UserService(MongoUserRepository())
     service_agent = AgentService(MongoAgentRepository())
-    vehicle_service = VehicleService(
+    service_vehicle = VehicleService(
         MongoVehicleRepository(), service_user, localization
     )
 
