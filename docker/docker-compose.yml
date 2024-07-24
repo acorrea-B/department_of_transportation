@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: user
+      MONGO_INITDB_ROOT_PASSWORD: 123456
+    volumes:
+      - mongo_data:/data/db
+
+  dtwebservice:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.backend
+    container_name: DTWebService
+    depends_on:
+      - mongo
+    environment:
+      ENVIRONMENT: local
+      MONGO_HOST: mongodb://user:123456@mongo:27017
+      MONGO_USERNAME: user
+      MONGO_PASSWORD: 123456
+      MONGO_DB: DTdb
+    ports:
+      - "5000:5000"
+volumes:
+  mongo_data:
