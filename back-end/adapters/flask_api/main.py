@@ -17,8 +17,6 @@ from adapters.flask_api.routes.agent_routes import agent_blueprint
 from adapters.flask_api.routes.vehicle_routes import vehicle_blueprint
 
 
-
-
 class DependenciContainer:
     def __init__(self):
         connect(
