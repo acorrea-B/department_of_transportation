@@ -27,5 +27,13 @@
     "violation_created": "Violation created successfully.",
     "violation_deleted": "Violation deleted successfully.",
     "violation_updated": "Violation updated successfully.",
-    "violation_read": "Violation read successfully."
+    "violation_read": "Violation read successfully.",
+    "agent_field_name": "Agent full name",
+    "agent_field_identifier": "Agent identification",
+    "agent_field_username": "Agent unique username",
+    "agent_field_password": "Agent secure password",
+    "agent_field_repeat_password": "Agent repeat secure password",
+    "password_min_length": "Password must be at least 6 characters long.",
+    "password_structure": "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.",
+    "password_not_match": "Passwords must match"
 }

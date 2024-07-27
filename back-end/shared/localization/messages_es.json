@@ -27,5 +27,13 @@
     "violation_created": "Infracción creada con éxito.",
     "violation_deleted": "Infracción eliminada con éxito.",
     "violation_updated": "Infracción actualizada con éxito.",
-    "violation_read": "Infracción listada con éxito."
+    "violation_read": "Infracción listada con éxito.",
+    "agent_field_name": "Nombre completo del agente",
+    "agent_field_identifier": "Identificacion del agente",
+    "agent_field_username": "Nombre de usuario unico del agente",
+    "agent_field_password": "Contraseña del agente",
+    "agent_field_repeat_password": "Confirma contraseña del agente",
+    "password_min_length": "La contraseña debe de contener por lo menos 6 carácteres.",
+    "password_structure": "La contraseña debe contener al menos una letra mayúscula, una letra minúscula, un dígito y un carácter especial.",
+    "password_not_match": "Las contraseñas deben coincidir"
 }

@@ -15,6 +15,7 @@ from application.repository.mongo_vehicle_repository import MongoVehicleReposito
 from adapters.flask_api.routes.user_routes import user_blueprint
 from adapters.flask_api.routes.agent_routes import agent_blueprint
 from adapters.flask_api.routes.vehicle_routes import vehicle_blueprint
+from adapters.flask_api.routes.auth import jwt, bcrypt
 
 
 class DependenciContainer:
@@ -35,6 +36,9 @@ class DependenciContainer:
 
 
 app = Flask(__name__)
+
+jwt.init_app(app)
+bcrypt.init_app(app)
 
 user_blueprint.dependencie_container = DependenciContainer()
 agent_blueprint.dependencie_container = DependenciContainer()
