@@ -5,7 +5,7 @@ from domain.models.auth import Auth
 
 def test_add_agent(mongo_db, auth_repository, model_auth_agent):
 
-    result = auth_repository.add_agent(model_auth_agent)
+    result = auth_repository.add_auth(model_auth_agent)
 
     assert isinstance(result, Auth)
     assert result.username == model_auth_agent.username

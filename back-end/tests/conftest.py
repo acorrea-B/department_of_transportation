@@ -111,7 +111,7 @@ def exist_auth_user(model_auth_user, auth_repository):
 @pytest.fixture(scope="function")
 def model_auth_agent(exists_agent):
     return Auth(
-        username="test", password="1aw434ds.adq", user_id="", agent_id=exists_agent.id
+        username="test", password="1aw434ds.adq", user_id="", agent_id=str(exists_agent.id)
     )
 
 
