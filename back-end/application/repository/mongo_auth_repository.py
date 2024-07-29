@@ -1,98 +1,69 @@
 from application.ports.i_auth_repository import IAuthRepository
 from domain.models.auth import Auth
-from infrastructure.db_adapter.mongo.aut import Auth as MongoAgent
+from infrastructure.db_adapter.mongo.auth import Auth as MongoAuth
 from shared.utils.logger import logger_error
 from mongoengine.errors import NotUniqueError, DoesNotExist
 from shared.utils.exceptions import UniqueViolation, NotFoundModel
 
 
-class MongoAgentRepository(IAgentRepository):
+class MongoAuthRepository(IAuthRepository):
     """
-    Repository class for managing agents in MongoDB.
+    Repository class for managing auth in MongoDB.
     """
 
-    def add_agent(self, agent):
+    def add_auth(self, auth):
         """
-        Adds a new agent to the repository.
+        Adds a new auth to the repository.
 
         Args:
-            agent (Agent): The agent object to be added.
+            auth (Auth): The auth object to be added.
 
         Returns:
-            Agent: The added agent object.
+            Auth: The added Auth object.
 
         Raises:
-            UniqueViolation: If an agent with the same identifier already exists.
+            UniqueViolation: If an auth with the same username already exists.
         """
         try:
-            mongo_agent = MongoAgent(name=agent.name, identifier=agent.identifier)
-            mongo_agent.save()
+            mongo_auth = MongoAuth(username=auth.username, password=auth.password, user_id=auth.user_id, agent_id=auth.agent_id)
+            mongo_auth.save()
         except NotUniqueError as e:
-            raise UniqueViolation("agent_exists")
+            raise UniqueViolation("auth_exists")
 
-        return Agent(**mongo_agent.to_dict())
+        return Auth(**mongo_auth.to_dict())
 
-    def get_agent_by_identifier(self, identifier):
+    def get_auth(self, username, password):
         """
-        Retrieves an agent from the repository based on its identifier.
+        Retrieves an auth from the repository based on its username.
 
         Args:
-            identifier (str): The identifier of the agent.
+            username (str): The username of the auth.
+            password (str): The password of the auth.
 
         Returns:
-            Agent: The retrieved agent object.
+            auth: The retrieved auth object.
 
         Raises:
-            NotFoundModel: If the agent with the specified identifier is not found.
+            NotFoundModel: If the auth with the specified username is not found.
         """
         try:
-            mongo_agent = MongoAgent.objects.get(identifier=identifier)
-            return Agent(**mongo_agent.to_dict())
+            mongo_auth = MongoAuth.objects.get(username=username, password=password)
+            return Auth(**mongo_auth.to_dict())
         except DoesNotExist:
-            raise NotFoundModel("agent_not_found")
+            raise NotFoundModel("auth_not_found")
 
-    def update_agent(self, agent):
+    def delete_auth(self, username):
         """
-        Updates an existing agent in the repository.
+        Deletes an auth from the repository based on its username.
 
         Args:
-            agent (Agent): The updated agent object.
-
-        Returns:
-            Agent: The updated agent object.
+            username (str): The username of the auth to be deleted.
 
         Raises:
-            NotFoundModel: If the agent with the specified identifier is not found.
+            NotFoundModel: If the auth with the specified username is not found.
         """
         try:
-            mongo_agent = MongoAgent.objects.get(identifier=agent.identifier)
-        except DoesNotExist:
-            raise NotFoundModel("agent_not_found")
-        mongo_agent.name = agent.name
-        mongo_agent.save()
-        return Agent(**mongo_agent.to_dict())
-
-    def delete_agent(self, identifier):
-        """
-        Deletes an agent from the repository based on its identifier.
-
-        Args:
-            identifier (str): The identifier of the agent to be deleted.
-
-        Raises:
-            NotFoundModel: If the agent with the specified identifier is not found.
-        """
-        try:
-            agent = MongoAgent.objects.get(identifier=identifier)
-            agent.delete()
+            mongo_auth = MongoAuth.objects.get(username=username)
+            mongo_auth.delete()
         except DoesNotExist as e:
-            raise NotFoundModel("agent_not_found")
-
-    def get_agents(self):
-        """
-        Retrieves all agents from the repository.
-
-        Returns:
-            list[Agent]: A list of all agent objects in the repository.
-        """
-        return [Agent(**item.to_dict()) for item in MongoAgent.objects().all()]
+            raise NotFoundModel("auth_not_found")

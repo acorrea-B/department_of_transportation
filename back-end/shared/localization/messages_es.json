@@ -35,5 +35,7 @@
     "agent_field_repeat_password": "Confirma contraseña del agente",
     "password_min_length": "La contraseña debe de contener por lo menos 6 carácteres.",
     "password_structure": "La contraseña debe contener al menos una letra mayúscula, una letra minúscula, un dígito y un carácter especial.",
-    "password_not_match": "Las contraseñas deben coincidir"
+    "password_not_match": "Las contraseñas deben coincidir",
+    "auth_exists": "Ya existe el nombre de usuario.",
+    "auth_not_found": "Nombre de usuario o contraseña ya existen"
 }

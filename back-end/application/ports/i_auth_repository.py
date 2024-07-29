@@ -7,9 +7,9 @@ class IAuthRepository(ABC):
         pass
 
     @abstractmethod
-    def get_auth(self, agent_id, user_id):
+    def get_auth(self, username, password):
         pass
 
     @abstractmethod
-    def delete_auth(self, agent_id, user_id):
+    def delete_auth(self, username):
         pass
