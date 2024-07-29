@@ -1,7 +1,6 @@
 from application.ports.i_auth_repository import IAuthRepository
 from domain.models.auth import Auth
 from infrastructure.db_adapter.mongo.auth import Auth as MongoAuth
-from shared.utils.logger import logger_error
 from mongoengine.errors import NotUniqueError, DoesNotExist
 from shared.utils.exceptions import UniqueViolation, NotFoundModel
 
@@ -25,6 +24,7 @@ class MongoAuthRepository(IAuthRepository):
             UniqueViolation: If an auth with the same username already exists.
         """
         try:
+            print(auth.agent_id)
             mongo_auth = MongoAuth(username=auth.username, password=auth.password, user_id=auth.user_id, agent_id=auth.agent_id)
             mongo_auth.save()
         except NotUniqueError as e:
@@ -34,7 +34,7 @@ class MongoAuthRepository(IAuthRepository):
 
     def get_auth(self, username, password):
         """
-        Retrieves an auth from the repository based on its username.
+        Retrieves an auth from the repository based on its username ad password.
 
         Args:
             username (str): The username of the auth.
@@ -44,7 +44,7 @@ class MongoAuthRepository(IAuthRepository):
             auth: The retrieved auth object.
 
         Raises:
-            NotFoundModel: If the auth with the specified username is not found.
+            NotFoundModel: If the auth with the specified username and password is not found.
         """
         try:
             mongo_auth = MongoAuth.objects.get(username=username, password=password)

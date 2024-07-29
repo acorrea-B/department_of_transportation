@@ -6,17 +6,20 @@ from application.repository.mongo_user_repository import MongoUserRepository
 from application.repository.mongo_agent_repository import MongoAgentRepository
 from application.repository.mongo_vehicle_repository import MongoVehicleRepository
 from application.repository.mongo_violation_repository import MongoViolationsRepository
+from application.repository.mongo_auth_repository import MongoAuthRepository
 from infrastructure.localization.json_localization import JSONLocalizationAdapter
 
 from application.use_cases.user_service import UserService
 from application.use_cases.agent_service import AgentService
 from application.use_cases.vehicle_service import VehicleService
 from application.use_cases.violation_service import ViolationService
+from application.use_cases.auth_service import AuthService
 
 from domain.models.user import User
 from domain.models.vehicle import Vehicle
 from domain.models.agent import Agent
 from domain.models.violation import Violation
+from domain.models.auth import Auth
 
 
 @pytest.fixture(scope="function")
@@ -58,6 +61,11 @@ def violation_repository():
 
 
 @pytest.fixture(scope="function")
+def auth_repository():
+    return MongoAuthRepository()
+
+
+@pytest.fixture(scope="function")
 def user_service(user_repository):
     return UserService(user_repository)
 
@@ -78,9 +86,40 @@ def violation_service(violation_repository, vehicle_service):
 
 
 @pytest.fixture(scope="function")
+def auth_service(auth_repository):
+    return AuthService(auth_repository)
+
+
+@pytest.fixture(scope="function")
 def exists_agent(model_agent, agent_repository):
     agent = agent_repository.add_agent(model_agent)
     return agent
+
+
+@pytest.fixture(scope="function")
+def exist_auth_agent(model_auth_agent, auth_repository):
+    auth = auth_repository.add_auth(model_auth_agent)
+    return auth
+
+
+@pytest.fixture(scope="function")
+def exist_auth_user(model_auth_user, auth_repository):
+    auth = auth_repository.add_auth(model_auth_user)
+    return auth
+
+
+@pytest.fixture(scope="function")
+def model_auth_agent(exists_agent):
+    return Auth(
+        username="test", password="1aw434ds.adq", user_id="", agent_id=exists_agent.id
+    )
+
+
+@pytest.fixture(scope="function")
+def model_auth_user(exists_user):
+    return Auth(
+        username="test", password="1aw434ds.adq", user_id=exists_user.id, agent_id=""
+    )
 
 
 @pytest.fixture(scope="function")

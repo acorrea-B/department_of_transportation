@@ -3,7 +3,7 @@ from domain.models.base import Base
 
 class Auth(Base):
     def __init__(
-        self, username, password, id=None, agent_id=None, user_id=None, updated_at=None
+        self, username, password, id=None, agent_id="", user_id="", updated_at=None
     ):
         super().__init__(id, updated_at)
         self.username = username

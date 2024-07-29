@@ -2,7 +2,6 @@ from collections.abc import Sequence
 from typing import Mapping
 from wtforms import StringField, validators, PasswordField
 from adapters.flask_api.inputs.base_form import BaseForm
-from adapters.flask_api.inputs.password_input import password_validator
 
 
 class AgentForm(BaseForm):
