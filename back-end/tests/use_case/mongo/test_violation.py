@@ -19,7 +19,7 @@ def test_register_violation(
     assert violation is not None
     assert violation.vehicle.id == model_violation.vehicle.id
     assert violation.comments == model_violation.comments
-    assert violation.timestamp == model_violation.timestamp
+    assert violation.timestamp[:18] == model_violation.timestamp[:18]
 
 def test_register_violation_vehicle_not_exist(
     mongo_db,

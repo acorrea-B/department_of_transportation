@@ -9,6 +9,7 @@ from domain.models.agent import Agent
 from domain.models.violation import Violation
 from domain.models.auth import Auth
 
+
 @pytest.fixture(scope="function")
 def mongo_db():
     connect(
@@ -20,7 +21,6 @@ def mongo_db():
     )
     yield
     disconnect()
-
 
 
 @pytest.fixture(scope="function")
@@ -57,9 +57,10 @@ def model_agent():
 
 @pytest.fixture(scope="function")
 def model_violation(exists_agent, exists_vehicle):
+    timestamp=datetime.now()
     return Violation(
         vehicle=exists_vehicle,
-        timestamp=datetime.now(),
+        timestamp=timestamp,
         comments="Speeding",
     )
 
